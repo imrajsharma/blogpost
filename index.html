@@ -3,61 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Content Publisher</title>
+    <title>Zlet Ai FAQ</title>
+    <style>
+        /* Your CSS styles here */
+    </style>
 </head>
 <body>
-    <div class="content-form">
-        <label for="title">Title:</label>
-        <input type="text" id="title" required>
+    <header>
+        <h1>Zlet Ai FAQ</h1>
+    </header>
 
-        <label for="content">Content:</label>
-        <textarea id="content" required></textarea>
-
-        <button onclick="publishContent()">Publish</button>
+    <div class="faq-container" id="faq-container">
+        <!-- FAQ content will be dynamically added here -->
     </div>
 
-    <script>
-         const GITHUB_TOKEN = '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' // Replace with your GitHub personal access token
-const REPO_OWNER = 'imrajsharma';
-const REPO_NAME = 'blogpost';
-const FILE_PATH = 'https://imrajsharma.github.io/blogpost/content.json';
+    <script type="module">
+        document.addEventListener('DOMContentLoaded', async function () {
+            const faqContainer = document.getElementById('faq-container');
 
-function publishContent() {
-    const title = document.getElementById("title").value;
-    const content = document.getElementById("content").value;
+            // Fetch the FAQ data from the external JSON file
+            const response = await fetch('faq-data.json');
+            const faqData = await response.json();
 
-    if (title && content) {
-        const newContent = {
-            title: title,
-            content: content,
-            timestamp: new Date().toISOString()
-        };
+            faqData.mainEntity.forEach(function (item) {
+                const questionElement = document.createElement('div');
+                questionElement.classList.add('question');
+                questionElement.innerHTML = `<h2>${item.name}</h2>`;
 
-        fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                message: 'Update content.json',
-                content: btoa(JSON.stringify([newContent], null, 2)),
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert('Content published successfully!');
-            console.log('GitHub response:', data);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
+                const answerElement = document.createElement('div');
+                answerElement.classList.add('answer');
+                answerElement.textContent = item.acceptedAnswer.text;
+
+                faqContainer.appendChild(questionElement);
+                faqContainer.appendChild(answerElement);
+            });
         });
-    } else {
-        alert('Please fill in both title and content fields.');
-    }
-}
-
     </script>
 </body>
 </html>
