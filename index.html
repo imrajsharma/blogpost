@@ -5,44 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zlet Ai FAQ</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        header {
-            background-color: #4CAF50;
-            color: white;
-            text-align: center;
-            padding: 1em;
-        }
-
-        .faq-container {
-            max-width: 90%;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-
-        .question {
-            margin-bottom: 15px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 15px;
-        }
-
-        .question h2 {
-            color: #333;
-        }
-
-        .answer {
-            color: #555;
-        }
+        /* Your existing styles go here */
     </style>
-    <script type="application/ld+json">
+    <script type="application/ld+json" id="faq-data">
         {
             "@context": "https://schema.org",
             "@type": "FAQPage",
@@ -135,27 +100,40 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const faqContainer = document.getElementById('faq-container');
-            const faqData = document.querySelector('script[type="application/ld+json"]');
+            const faqData = document.getElementById('faq-data');
 
             if (faqData) {
-                const parsedFaqData = JSON.parse(faqData.textContent);
+                try {
+                    const parsedFaqData = JSON.parse(faqData.textContent);
 
-                parsedFaqData.mainEntity.forEach(function (item) {
-                    const questionElement = document.createElement('div');
-                    questionElement.classList.add('question');
+                    if (parsedFaqData && parsedFaqData.mainEntity && Array.isArray(parsedFaqData.mainEntity)) {
+                        parsedFaqData.mainEntity.forEach(function (item) {
+                            const questionElement = document.createElement('div');
+                            questionElement.classList.add('question');
 
-                    const questionTitle = document.createElement('h2');
-                    questionTitle.textContent = item.name;
+                            const questionTitle = document.createElement('h2');
+                            questionTitle.textContent = item.name;
 
-                    const answerElement = document.createElement('div');
-                    answerElement.classList.add('answer');
-                    answerElement.textContent = item.acceptedAnswer.text;
+                            const answerElement = document.createElement('div');
+                            answerElement.classList.add('answer');
+                            answerElement.innerHTML = `<p>${item.acceptedAnswer.text}</p>`;
 
-                    questionElement.appendChild(questionTitle);
-                    questionElement.appendChild(answerElement);
+                            questionElement.appendChild(questionTitle);
+                            questionElement.appendChild(answerElement);
 
-                    faqContainer.appendChild(questionElement);
-                });
+                            faqContainer.appendChild(questionElement);
+
+                            // Toggle answer display on question click
+                            questionElement.addEventListener('click', function () {
+                                answerElement.style.display = (answerElement.style.display === 'block') ? 'none' : 'block';
+                            });
+                        });
+                    } else {
+                        console.error("FAQ data is not in the expected format.");
+                    }
+                } catch (error) {
+                    console.error("Error parsing FAQ data:", error);
+                }
             }
         });
     </script>
