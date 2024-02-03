@@ -1,0 +1,16 @@
+
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "What is Zlet Ai?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Zlet Ai is a free online platform that offers a diverse range of tools for personal, professional, and business needs. From PDF tools to image manipulators, calculators, AI generative content, video enhancements, developer tools, and SEO utilities, Zlet Ai is your all-in-one toolkit."
+            }
+        },
+        // ... (include the rest of your FAQ data)
+    ]
+}
